@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS "user";
+
+DROP TYPE IF EXISTS "document_t";
+DROP TYPE IF EXISTS "user_t";
+
