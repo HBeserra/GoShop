@@ -1,9 +1,9 @@
-package ProductCatalog_test
+package prodcatalog_test
 
 import (
 	"context"
 	"errors"
-	"github.com/HBeserra/GoShop/ProductCatalog"
+	"github.com/HBeserra/GoShop/internal/prodcatalog"
 	"github.com/HBeserra/GoShop/pkg/currency"
 	"go.uber.org/mock/gomock"
 	"testing"
@@ -184,7 +184,8 @@ func TestCreateProduct(t *testing.T) {
 			mockAuth := NewMockAuthService(authCtrl)
 			mockRepo := NewMockProductRepository(repoCtrl)
 			mockBus := NewMockEventBus(busCtrl)
-			service := ProductCatalog.NewProductService(mockRepo, mockBus, mockAuth)
+			service, err := prodcatalog.NewProductService(mockRepo, mockBus, mockAuth)
+			assert.NoError(t, err)
 
 			if tt.setup != nil {
 				tt.setup(setupParams{
@@ -195,7 +196,7 @@ func TestCreateProduct(t *testing.T) {
 			}
 
 			prod := tt.product
-			err := service.CreateProduct(context.Background(), tt.userID, prod)
+			err = service.CreateProduct(context.Background(), tt.userID, prod)
 
 			assert.ErrorIs(t, err, tt.expectedError)
 			if tt.expectedError == nil && tt.expectedProduct != nil {

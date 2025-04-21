@@ -1,4 +1,4 @@
-package ProductCatalog
+package prodcatalog
 
 import (
 	"context"
@@ -56,10 +56,10 @@ type ProductService struct {
 	auth AuthService
 }
 
-func NewProductService(repo ProductRepository, bus EventBus, auth AuthService) *ProductService {
+func NewProductService(repo ProductRepository, bus EventBus, auth AuthService) (*ProductService, error) {
 	return &ProductService{
 		repo: repo,
 		bus:  bus,
 		auth: auth,
-	}
+	}, nil
 }
