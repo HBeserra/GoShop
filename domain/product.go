@@ -15,11 +15,14 @@ type Product struct {
 	CreatedAt time.Time `json:"created_at"`                             // CreatedAt indicates the timestamp when the entity was created, stored as a string in the JSON response.
 	UpdatedAt time.Time `json:"updated_at"`                             // UpdatedAt indicates the last time the entity was modified
 
-	Name  string       `json:"name"`
-	Price currency.BRL `json:"price"`
-	Stock int64        `json:"stock"`
+	Title  string        `json:"title"`
+	Price  currency.BRL  `json:"price"`
+	Stock  int64         `json:"stock"`
+	Status ProductStatus `json:"status"`
+	// SKU is the stock-keeping unit, a unique identifier for inventory tracking.
+	SKU string `json:"sku" gorm:"index:idx_product"`
 	// Medias represents a collection of associated media objects for a product, stored with many-to-many relationship mapping.
-	Medias []Media `json:"medias" gorm:"embedded;many2many:product_medias;"`
+	Medias []Media `json:"medias" gorm:"many2many:product_medias;"`
 	// Variants represents a collection of associated variant objects for a product, such as size or color options.
 	Variants []ProductVariant
 }
@@ -36,12 +39,18 @@ type ProductVariant struct {
 
 	// ProductID represents the unique identifier of the product associated with this variant.
 	ProductID uuid.UUID `json:"product_id" gorm:"index:idx_product_variant"`
-	// Name specifies the name of the product variant.
-	Name string `json:"name"`
+	// Title specifies the name of the product variant.
+	Title string `json:"title"`
 	// Price represents the cost of the product variant as a floating-point number.
 	Price currency.BRL `json:"price"`
 	// Stock indicates the quantity of this product variant available in inventory.
 	Stock int64 `json:"stock"`
+	// Medias represents a collection of associated media for the product variant, using a many-to-many relationship.
+	Medias []Media `json:"medias" gorm:"many2many:product_variant_medias;"`
+
+	ShortDesc string `json:"short_desc"`
+	HtmlDesc  string `json:"html_desc"`
+	TextDesc  string `json:"text_desc"`
 }
 
 type ProductLogEvent struct {
@@ -53,6 +62,14 @@ type ProductLogEvent struct {
 	Data      interface{}  `json:"data"`
 	UserID    uuid.UUID    `json:"user_id" gorm:"index:idx_product_log_event"`
 }
+
+type ProductStatus string
+
+const (
+	ProductStatusDraft      ProductStatus = "draft"
+	ProductStatusOutOfStock ProductStatus = "out_of_stock"
+	ProductStatusAvailable  ProductStatus = "available"
+)
 
 type ProductEvent string
 

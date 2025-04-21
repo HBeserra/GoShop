@@ -100,3 +100,18 @@ func (b BRL) Split(n int) []BRL {
 
 	return parts
 }
+
+// LessOrEqual checks if the BRL value is less than or equal to another BRL value.
+func (b BRL) LessOrEqual(other BRL) bool {
+	return b <= other
+}
+
+func (b BRL) Float64() float64 {
+	return float64(b) / 100
+}
+
+// NewFromFloat creates a new BRL value from a float64 representation.
+// The float64 input represents the amount in major.minor format (e.g., 123.45).
+func NewFromFloat(value float64) BRL {
+	return BRL(int64(value * 100))
+}
