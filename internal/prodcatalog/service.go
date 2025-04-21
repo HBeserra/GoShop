@@ -46,9 +46,11 @@ type EventBus interface {
 
 // AuthService returns information about the current command
 type AuthService interface {
+
+	// GetUserID retrieves the unique identifier (UUID) of the user from the provided context. Returns an error if retrieval fails.
 	GetUserID(ctx context.Context) (uuid.UUID, error)
-	GetPermissions(ctx context.Context, userID uuid.UUID) ([]string, error)
-	HasPermission(ctx context.Context, userID uuid.UUID, permission ...string) (bool, error)
+	// CheckPermissions verifies if a user has the required permissions for a specified namespace and action(s). It returns a boolean indicating access and an error if the operation fails.
+	CheckPermissions(ctx context.Context, userID uuid.UUID, namespace string, permission ...string) (bool, error)
 }
 
 type MediaCtrl interface {

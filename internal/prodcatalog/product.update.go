@@ -11,6 +11,7 @@ import (
 
 func (s *ProductService) UpdateProduct(
 	ctx context.Context,
+	namespace string,
 	product *domain.Product,
 ) error {
 
@@ -22,7 +23,7 @@ func (s *ProductService) UpdateProduct(
 		return fmt.Errorf("%w: %w", domain.ErrUnauthorized, err)
 	}
 
-	perm, err := s.auth.HasPermission(ctx, userID, "product:update")
+	perm, err := s.auth.CheckPermissions(ctx, userID, namespace, "product:update")
 	if err != nil {
 		return fmt.Errorf("%w: %w", domain.ErrUnauthorized, err)
 	}

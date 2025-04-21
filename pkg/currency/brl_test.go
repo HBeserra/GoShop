@@ -126,7 +126,8 @@ func TestAdd(t *testing.T) {
 	}{
 		{"positive values", BRL(12345), BRL(67890), BRL(80235)},
 		{"zero value", BRL(12345), BRL(0), BRL(12345)},
-		{"negative value", BRL(12345), BRL(-4567), BRL(7788)},
+		{"negative value", BRL(12345), BRL(-4567), BRL(7778)},
+		{"negative result", BRL(-12345), BRL(-4567), BRL(-16912)},
 	}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

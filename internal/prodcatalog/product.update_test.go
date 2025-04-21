@@ -40,7 +40,7 @@ func TestUpdateProduct(t *testing.T) {
 			name: "successful update",
 			setupMocks: func() {
 				mockAuth.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				mockAuth.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				mockAuth.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 				mockRepo.EXPECT().Update(gomock.Any(), validProduct).Return(nil)
 			},
 			product:       validProduct,
@@ -50,7 +50,7 @@ func TestUpdateProduct(t *testing.T) {
 			name: "user unauthorized",
 			setupMocks: func() {
 				mockAuth.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				mockAuth.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(false, nil)
+				mockAuth.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(false, nil)
 			},
 			product:       validProduct,
 			expectedError: domain.ErrUnauthorized,
@@ -67,7 +67,7 @@ func TestUpdateProduct(t *testing.T) {
 			name: "repository update error",
 			setupMocks: func() {
 				mockAuth.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				mockAuth.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				mockAuth.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 				mockRepo.EXPECT().Update(gomock.Any(), validProduct).Return(domain.ErrProductNotFound)
 			},
 			product:       validProduct,
@@ -77,7 +77,7 @@ func TestUpdateProduct(t *testing.T) {
 			name: "validation error",
 			setupMocks: func() {
 				mockAuth.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				mockAuth.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				mockAuth.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 			},
 			product:       &domain.Product{ID: uuid.New(), Title: "Produto 12", Price: -100}, // invalid price
 			expectedError: domain.ErrInvalidProductPrice,
@@ -88,7 +88,7 @@ func TestUpdateProduct(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.setupMocks()
 
-			err := service.UpdateProduct(context.Background(), tt.product)
+			err := service.UpdateProduct(context.Background(), "", tt.product)
 
 			assert.ErrorIs(t, err, tt.expectedError)
 		})

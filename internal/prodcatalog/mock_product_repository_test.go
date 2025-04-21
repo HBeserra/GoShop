@@ -220,19 +220,24 @@ func (m *MockAuthService) EXPECT() *MockAuthServiceMockRecorder {
 	return m.recorder
 }
 
-// GetPermissions mocks base method.
-func (m *MockAuthService) GetPermissions(ctx context.Context, userID uuid.UUID) ([]string, error) {
+// CheckPermissions mocks base method.
+func (m *MockAuthService) CheckPermissions(ctx context.Context, userID uuid.UUID, namespace string, permission ...string) (bool, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPermissions", ctx, userID)
-	ret0, _ := ret[0].([]string)
+	varargs := []any{ctx, userID, namespace}
+	for _, a := range permission {
+		varargs = append(varargs, a)
+	}
+	ret := m.ctrl.Call(m, "CheckPermissions", varargs...)
+	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetPermissions indicates an expected call of GetPermissions.
-func (mr *MockAuthServiceMockRecorder) GetPermissions(ctx, userID any) *gomock.Call {
+// CheckPermissions indicates an expected call of CheckPermissions.
+func (mr *MockAuthServiceMockRecorder) CheckPermissions(ctx, userID, namespace any, permission ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPermissions", reflect.TypeOf((*MockAuthService)(nil).GetPermissions), ctx, userID)
+	varargs := append([]any{ctx, userID, namespace}, permission...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckPermissions", reflect.TypeOf((*MockAuthService)(nil).CheckPermissions), varargs...)
 }
 
 // GetUserID mocks base method.
@@ -248,26 +253,6 @@ func (m *MockAuthService) GetUserID(ctx context.Context) (uuid.UUID, error) {
 func (mr *MockAuthServiceMockRecorder) GetUserID(ctx any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserID", reflect.TypeOf((*MockAuthService)(nil).GetUserID), ctx)
-}
-
-// HasPermission mocks base method.
-func (m *MockAuthService) HasPermission(ctx context.Context, userID uuid.UUID, permission ...string) (bool, error) {
-	m.ctrl.T.Helper()
-	varargs := []any{ctx, userID}
-	for _, a := range permission {
-		varargs = append(varargs, a)
-	}
-	ret := m.ctrl.Call(m, "HasPermission", varargs...)
-	ret0, _ := ret[0].(bool)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// HasPermission indicates an expected call of HasPermission.
-func (mr *MockAuthServiceMockRecorder) HasPermission(ctx, userID any, permission ...any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{ctx, userID}, permission...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasPermission", reflect.TypeOf((*MockAuthService)(nil).HasPermission), varargs...)
 }
 
 // MockMediaCtrl is a mock of MediaCtrl interface.

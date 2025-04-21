@@ -32,13 +32,23 @@ func (b *BRL) UnmarshalJSON(data []byte) error {
 	if _, err := fmt.Sscanf(str, "%d.%02d", &major, &minor); err != nil {
 		return err
 	}
+	if major < 0 {
+		minor = -minor // Ensure the minor part has the same sign as the major part
+	}
 	*b = BRL(major*100 + minor)
 	return nil
 }
 
 // String formats the BRL value into a human-readable string using the format "major.minor" (e.g., "123.45").
 func (b BRL) String() string {
-	return fmt.Sprintf("%d.%02d", b/100, b%100)
+
+	value := b / 100
+	cents := b % 100
+	if cents < 0 {
+		cents = -cents
+	}
+
+	return fmt.Sprintf("%d.%02d", value, cents)
 }
 
 // Cents returns the integer representation of the BRL amount in cents.

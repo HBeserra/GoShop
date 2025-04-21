@@ -48,7 +48,7 @@ func TestCreateProduct(t *testing.T) {
 			},
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				t.authService.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(false, nil)
+				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(false, nil)
 			},
 			expectedError: domain.ErrUnauthorized,
 		},
@@ -59,7 +59,7 @@ func TestCreateProduct(t *testing.T) {
 			},
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				t.authService.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(false, errors.New("any error"))
+				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(false, errors.New("any error"))
 			},
 			expectedError: domain.ErrUnauthorized,
 		},
@@ -70,7 +70,7 @@ func TestCreateProduct(t *testing.T) {
 			},
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				t.authService.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 			},
 			expectedError: domain.ErrInvalidProductTitle,
 		},
@@ -82,7 +82,7 @@ func TestCreateProduct(t *testing.T) {
 			},
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				t.authService.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 			},
 			expectedError: domain.ErrInvalidProductPrice,
 		},
@@ -100,7 +100,7 @@ func TestCreateProduct(t *testing.T) {
 			},
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				t.authService.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 			},
 			expectedError: domain.ErrInvalidProductPrice,
 		},
@@ -122,7 +122,7 @@ func TestCreateProduct(t *testing.T) {
 			},
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				t.authService.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 			},
 			expectedError: domain.ErrInvalidProductPrice,
 		},
@@ -135,7 +135,7 @@ func TestCreateProduct(t *testing.T) {
 			},
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				t.authService.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 				t.repoService.EXPECT().Create(gomock.Any(), gomock.Any()).Return(errors.New("repository error"))
 			},
 			expectedError: domain.ErrFailedToCreateProduct,
@@ -149,7 +149,7 @@ func TestCreateProduct(t *testing.T) {
 			},
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				t.authService.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 				t.repoService.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
 				t.busService.EXPECT().Publish(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("event publish error"))
 			},
@@ -164,7 +164,7 @@ func TestCreateProduct(t *testing.T) {
 			},
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
-				t.authService.EXPECT().HasPermission(gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
+				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
 				t.repoService.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
 				t.busService.EXPECT().Publish(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 			},
@@ -202,7 +202,7 @@ func TestCreateProduct(t *testing.T) {
 			}
 
 			prod := tt.product
-			err = service.CreateProduct(context.Background(), prod)
+			err = service.CreateProduct(context.Background(), "", prod)
 
 			assert.ErrorIs(t, err, tt.expectedError)
 			if tt.expectedError == nil && tt.expectedProduct != nil {
