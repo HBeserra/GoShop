@@ -30,6 +30,8 @@ type ProductRepository interface {
 
 	// Restore reverts a soft-deleted product by the provided UUID and returns an error if the operation fails.
 	Restore(ctx context.Context, id uuid.UUID) error
+
+	GetProductLog(ctx context.Context, filter *dto.ProductLogFilter) ([]interface{}, error)
 }
 
 type ProductService struct {

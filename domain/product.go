@@ -4,10 +4,17 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"shopper/pkg/currency"
+	"time"
 )
 
+// Product represents a product entity with details such as ID, name, price, stock, and associated media and variants.
 type Product struct {
-	BaseDomain
+	gorm.Model
+	ID        uuid.UUID `json:"id" gorm:"primaryKey;index:idx_product"` // ID is the primary key for the Product entity and is uniquely indexed.
+	Namespace string    `json:"namespace" gorm:"index:idx_product"`     // Namespace specifies the logical grouping in the multi-tenant system
+	CreatedAt time.Time `json:"created_at"`                             // CreatedAt indicates the timestamp when the entity was created, stored as a string in the JSON response.
+	UpdatedAt time.Time `json:"updated_at"`                             // UpdatedAt indicates the last time the entity was modified
+
 	Name  string       `json:"name"`
 	Price currency.BRL `json:"price"`
 	Stock int64        `json:"stock"`
@@ -22,12 +29,13 @@ type Product struct {
 // This type extends gorm.Model, providing standard fields like ID, CreatedAt, and UpdatedAt.
 type ProductVariant struct {
 	gorm.Model
-	ID        uuid.UUID `json:"id"`
-	CreatedAt string    `json:"created_at"`
-	UpdatedAt string    `json:"updated_at"`
+	ID        uuid.UUID `json:"id" gorm:"primaryKey;index:idx_product_variant"` // ID is the unique identifier for the ProductVariant and serves as the primary key.
+	Namespace string    `json:"namespace" gorm:"index:idx_product_variant"`     // Namespace specifies the logical grouping in the multi-tenant system
+	CreatedAt time.Time `json:"created_at"`                                     // CreatedAt indicates the timestamp when the entity was created
+	UpdatedAt time.Time `json:"updated_at"`                                     // UpdatedAt indicates the timestamp of the last update to this entity.
 
 	// ProductID represents the unique identifier of the product associated with this variant.
-	ProductID uuid.UUID `json:"product_id"`
+	ProductID uuid.UUID `json:"product_id" gorm:"index:idx_product_variant"`
 	// Name specifies the name of the product variant.
 	Name string `json:"name"`
 	// Price represents the cost of the product variant as a floating-point number.
@@ -36,9 +44,22 @@ type ProductVariant struct {
 	Stock int64 `json:"stock"`
 }
 
-type BaseDomain struct {
+type ProductLogEvent struct {
 	gorm.Model
-	ID        uuid.UUID `json:"id"`
-	CreatedAt string    `json:"created_at"`
-	UpdatedAt string    `json:"updated_at"`
+	Namespace string       `json:"namespace" gorm:"index:idx_product_log_event"`
+	ProductID uuid.UUID    `json:"product_id" gorm:"primaryKey,idx_product_log_event"`
+	Timestamp time.Time    `json:"timestamp" gorm:"primaryKey,idx_product_log_event"`
+	Event     ProductEvent `json:"event" gorm:"index:idx_product_log_event"`
+	Data      interface{}  `json:"data"`
+	UserID    uuid.UUID    `json:"user_id" gorm:"index:idx_product_log_event"`
 }
+
+type ProductEvent string
+
+const (
+	ProductCreated     ProductEvent = "product.created"
+	ProductUpdated     ProductEvent = "product.updated"
+	ProductDeleted     ProductEvent = "product.deleted"
+	ProductRestored    ProductEvent = "product.restored"
+	ProductStockUpdate ProductEvent = "product.stock.update"
+)
