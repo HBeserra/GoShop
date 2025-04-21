@@ -11,9 +11,9 @@ package ProductCatalog_test
 
 import (
 	context "context"
-	reflect "reflect"
-	domain "shopper/domain"
-	dto "shopper/domain/dto"
+	domain "github.com/HBeserra/GoShop/domain"
+	dto "github.com/HBeserra/GoShop/domain/dto"
+
 
 	uuid "github.com/google/uuid"
 	gomock "go.uber.org/mock/gomock"

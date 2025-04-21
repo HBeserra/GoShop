@@ -2,9 +2,9 @@ package ProductCatalog
 
 import (
 	"context"
+	"github.com/HBeserra/GoShop/domain"
+	"github.com/HBeserra/GoShop/domain/dto"
 	"github.com/google/uuid"
-	"shopper/domain"
-	"shopper/domain/dto"
 )
 
 // ProductRepository defines an interface for managing product data, including retrieval, deletion, and restoration operations.

@@ -3,12 +3,12 @@ package ProductCatalog
 import (
 	"context"
 	"fmt"
+	"github.com/HBeserra/GoShop/domain"
+	"github.com/HBeserra/GoShop/domain/events"
+	"github.com/HBeserra/GoShop/pkg/currency"
+	"github.com/HBeserra/GoShop/pkg/observability"
 	"github.com/google/uuid"
 	"log/slog"
-	"shopper/domain"
-	"shopper/domain/events"
-	"shopper/pkg/currency"
-	"shopper/pkg/observability"
 	"slices"
 	"time"
 )

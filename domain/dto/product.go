@@ -1,8 +1,8 @@
 package dto
 
 import (
+	"github.com/HBeserra/GoShop/domain"
 	"github.com/google/uuid"
-	"shopper/domain"
 	"time"
 )
 

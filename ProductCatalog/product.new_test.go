@@ -3,15 +3,15 @@ package ProductCatalog_test
 import (
 	"context"
 	"errors"
+	"github.com/HBeserra/GoShop/ProductCatalog"
+	"github.com/HBeserra/GoShop/pkg/currency"
 	"go.uber.org/mock/gomock"
-	"shopper/ProductCatalog"
-	"shopper/pkg/currency"
 	"testing"
 	"time"
 
+	"github.com/HBeserra/GoShop/domain"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"shopper/domain"
 )
 
 func TestCreateProduct(t *testing.T) {

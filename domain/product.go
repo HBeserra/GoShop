@@ -1,9 +1,9 @@
 package domain
 
 import (
+	"github.com/HBeserra/GoShop/pkg/currency"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
-	"shopper/pkg/currency"
 	"time"
 )
 
