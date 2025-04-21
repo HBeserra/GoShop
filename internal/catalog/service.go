@@ -1,4 +1,4 @@
-package prodcatalog
+package catalog
 
 import (
 	"context"
@@ -9,27 +9,27 @@ import (
 
 // ProductRepository defines an interface for managing product data, including retrieval, deletion, and restoration operations.
 //
-//go:generate mockgen -source=service.go -destination mock_product_repository_test.go --package prodcatalog_test
+//go:generate mockgen -source=service.go -destination mock_product_repository_test.go --package  catalog_test
 type ProductRepository interface {
 
 	// Find retrieves a list of products matching the criteria specified in the provided product filter. Returns an error if the operation fails.
-	Find(ctx context.Context, filter dto.ProductFilter) ([]*domain.Product, error)
+	Find(ctx context.Context, namespace string, filter dto.ProductFilter) ([]*domain.Product, error)
 
 	// GetByID retrieves a product by its unique identifier and returns the product or an error if not found.
-	GetByID(ctx context.Context, id uuid.UUID) (*domain.Product, error)
+	GetByID(ctx context.Context, namespace string, id uuid.UUID) (*domain.Product, error)
 
 	// Update updates the details of an existing product in the repository and returns an error if the operation fails.
-	Update(ctx context.Context, product *domain.Product) error
+	Update(ctx context.Context, namespace string, product *domain.Product) error
 
 	// Create adds a new product to the repository and returns an error if the operation fails.
-	Create(ctx context.Context, product *domain.Product) error
+	Create(ctx context.Context, namespace string, product *domain.Product) error
 
 	// Delete removes a product by the provided UUID and returns an error if the operation fails.
 	// uses soft-delete.
-	Delete(ctx context.Context, id uuid.UUID) error
+	Delete(ctx context.Context, namespace string, id uuid.UUID) error
 
 	// Restore reverts a soft-deleted product by the provided UUID and returns an error if the operation fails.
-	Restore(ctx context.Context, id uuid.UUID) error
+	Restore(ctx context.Context, namespace string, id uuid.UUID) error
 
 	GetProductLog(ctx context.Context, filter *dto.ProductLogFilter) ([]interface{}, error)
 }
@@ -54,9 +54,9 @@ type AuthService interface {
 }
 
 type MediaCtrl interface {
-	GetByID(ctx context.Context, id uuid.UUID) (*domain.Media, error)
-	GetPublicURL(ctx context.Context, id uuid.UUID) (string, error)
-	Upload(ctx context.Context, file []byte, mediaType string) (uuid.UUID, error)
+	GetByID(ctx context.Context, namespace string, id uuid.UUID) (*domain.Media, error)
+	GetPublicURL(ctx context.Context, namespace string, id uuid.UUID) (string, error)
+	Upload(ctx context.Context, namespace string, file []byte, mediaType string) (uuid.UUID, error)
 }
 
 type ProductService struct {

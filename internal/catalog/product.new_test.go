@@ -1,9 +1,9 @@
-package prodcatalog_test
+package catalog_test
 
 import (
 	"context"
 	"errors"
-	"github.com/HBeserra/GoShop/internal/prodcatalog"
+	"github.com/HBeserra/GoShop/internal/catalog"
 	"github.com/HBeserra/GoShop/pkg/currency"
 	"github.com/google/uuid"
 	"go.uber.org/mock/gomock"
@@ -136,7 +136,7 @@ func TestCreateProduct(t *testing.T) {
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
 				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
-				t.repoService.EXPECT().Create(gomock.Any(), gomock.Any()).Return(errors.New("repository error"))
+				t.repoService.EXPECT().Create(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("repository error"))
 			},
 			expectedError: domain.ErrFailedToCreateProduct,
 		},
@@ -150,7 +150,7 @@ func TestCreateProduct(t *testing.T) {
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
 				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
-				t.repoService.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
+				t.repoService.EXPECT().Create(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 				t.busService.EXPECT().Publish(gomock.Any(), gomock.Any(), gomock.Any()).Return(errors.New("event publish error"))
 			},
 			expectedError: nil,
@@ -165,7 +165,7 @@ func TestCreateProduct(t *testing.T) {
 			setup: func(t setupParams) {
 				t.authService.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
 				t.authService.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
-				t.repoService.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
+				t.repoService.EXPECT().Create(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 				t.busService.EXPECT().Publish(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil)
 			},
 			expectedError: nil,
@@ -190,7 +190,7 @@ func TestCreateProduct(t *testing.T) {
 			mockRepo := NewMockProductRepository(ctrl)
 			mockBus := NewMockEventBus(ctrl)
 			mockMedia := NewMockMediaCtrl(ctrl)
-			service, err := prodcatalog.NewProductService(mockRepo, mockBus, mockAuth, mockMedia)
+			service, err := catalog.NewProductService(mockRepo, mockBus, mockAuth, mockMedia)
 			assert.NoError(t, err)
 
 			if tt.setup != nil {

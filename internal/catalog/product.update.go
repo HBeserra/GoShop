@@ -1,4 +1,4 @@
-package prodcatalog
+package catalog
 
 import (
 	"context"
@@ -31,13 +31,13 @@ func (s *ProductService) UpdateProduct(
 		return domain.ErrUnauthorized
 	}
 
-	err = s.Validate(ctx, product)
+	err = s.Validate(ctx, namespace, product)
 	if err != nil {
 		return err
 	}
 
 	product.UpdatedAt = time.Now()
-	err = s.repo.Update(ctx, product)
+	err = s.repo.Update(ctx, namespace, product)
 	if err != nil {
 		slog.ErrorContext(ctx, "failed to update product",
 			"product_id", product.ID,

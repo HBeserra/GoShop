@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"github.com/HBeserra/GoShop/internal/prodcatalog"
+	"github.com/HBeserra/GoShop/internal/catalog"
 )
 
 type shutdownFn struct {
@@ -12,5 +12,5 @@ type shutdownFn struct {
 
 type app struct {
 	shutdownFn []shutdownFn
-	productSvc *prodcatalog.ProductService
+	productSvc *catalog.ProductService
 }

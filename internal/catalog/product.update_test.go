@@ -1,10 +1,10 @@
-package prodcatalog_test
+package catalog_test
 
 import (
 	"context"
 	"errors"
 	"github.com/HBeserra/GoShop/domain"
-	"github.com/HBeserra/GoShop/internal/prodcatalog"
+	"github.com/HBeserra/GoShop/internal/catalog"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -20,7 +20,7 @@ func TestUpdateProduct(t *testing.T) {
 	mockBus := NewMockEventBus(mockCtrl)
 	mockMedia := NewMockMediaCtrl(mockCtrl)
 
-	service, _ := prodcatalog.NewProductService(mockRepo, mockBus, mockAuth, mockMedia)
+	service, _ := catalog.NewProductService(mockRepo, mockBus, mockAuth, mockMedia)
 
 	validProduct := &domain.Product{
 		ID:     uuid.New(),
@@ -41,7 +41,7 @@ func TestUpdateProduct(t *testing.T) {
 			setupMocks: func() {
 				mockAuth.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
 				mockAuth.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
-				mockRepo.EXPECT().Update(gomock.Any(), validProduct).Return(nil)
+				mockRepo.EXPECT().Update(gomock.Any(), gomock.Any(), validProduct).Return(nil)
 			},
 			product:       validProduct,
 			expectedError: nil,
@@ -68,7 +68,7 @@ func TestUpdateProduct(t *testing.T) {
 			setupMocks: func() {
 				mockAuth.EXPECT().GetUserID(gomock.Any()).Return(uuid.New(), nil)
 				mockAuth.EXPECT().CheckPermissions(gomock.Any(), gomock.Any(), gomock.Any(), gomock.Any()).Return(true, nil)
-				mockRepo.EXPECT().Update(gomock.Any(), validProduct).Return(domain.ErrProductNotFound)
+				mockRepo.EXPECT().Update(gomock.Any(), gomock.Any(), validProduct).Return(domain.ErrProductNotFound)
 			},
 			product:       validProduct,
 			expectedError: domain.ErrProductNotFound,

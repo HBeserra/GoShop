@@ -1,4 +1,4 @@
-package prodcatalog
+package catalog
 
 import (
 	"context"
@@ -82,7 +82,7 @@ func (s *ProductService) CreateProduct(
 
 	// Validate the medias
 	for _, mediaID := range product.Medias {
-		_, err := s.media.GetByID(ctx, mediaID)
+		_, err := s.media.GetByID(ctx, namespace, mediaID)
 		if err != nil {
 			return domain.ErrInvalidMedia
 		}
@@ -90,14 +90,14 @@ func (s *ProductService) CreateProduct(
 
 	for _, variant := range product.Variants {
 		for _, mediaID := range variant.Medias {
-			_, err := s.media.GetByID(ctx, mediaID)
+			_, err := s.media.GetByID(ctx, namespace, mediaID)
 			if err != nil {
 				return domain.ErrInvalidMedia
 			}
 		}
 	}
 
-	err = s.repo.Create(ctx, product)
+	err = s.repo.Create(ctx, namespace, product)
 	if err != nil {
 		span.RecordError(err)
 		return domain.ErrFailedToCreateProduct

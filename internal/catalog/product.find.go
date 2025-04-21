@@ -1,4 +1,4 @@
-package prodcatalog
+package catalog
 
 import (
 	"context"
@@ -25,5 +25,5 @@ func (s *ProductService) Find(ctx context.Context, namespace string, filter dto.
 		return nil, domain.ErrUnauthorized
 	}
 
-	return s.repo.Find(ctx, filter)
+	return s.repo.Find(ctx, namespace, filter)
 }

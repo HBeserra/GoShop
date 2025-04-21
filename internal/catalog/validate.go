@@ -1,4 +1,4 @@
-package prodcatalog
+package catalog
 
 import (
 	"context"
@@ -8,9 +8,9 @@ import (
 	"slices"
 )
 
-func (s *ProductService) Validate(ctx context.Context, product *domain.Product) error {
+func (s *ProductService) Validate(ctx context.Context, namespace string, product *domain.Product) error {
 
-	ctx, span := observability.StartSpan(ctx, "prodcatalog.Validate")
+	ctx, span := observability.StartSpan(ctx, "catalog.Validate")
 	defer span.End()
 
 	if len(product.Title) < 10 || len(product.Title) > 100 {
@@ -53,7 +53,7 @@ func (s *ProductService) Validate(ctx context.Context, product *domain.Product) 
 
 	// Validate the medias
 	for _, mediaID := range product.Medias {
-		_, err := s.media.GetByID(ctx, mediaID)
+		_, err := s.media.GetByID(ctx, namespace, mediaID)
 		if err != nil {
 			return domain.ErrInvalidMedia
 		}
@@ -61,7 +61,7 @@ func (s *ProductService) Validate(ctx context.Context, product *domain.Product) 
 
 	for _, variant := range product.Variants {
 		for _, mediaID := range variant.Medias {
-			_, err := s.media.GetByID(ctx, mediaID)
+			_, err := s.media.GetByID(ctx, namespace, mediaID)
 			if err != nil {
 				return domain.ErrInvalidMedia
 			}

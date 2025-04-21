@@ -2,7 +2,7 @@ package app
 
 import (
 	"context"
-	"github.com/HBeserra/GoShop/internal/prodcatalog"
+	"github.com/HBeserra/GoShop/internal/catalog"
 	"log/slog"
 )
 
@@ -23,7 +23,7 @@ func New(ctx context.Context) {
 	 */
 
 	// Set up the Product Catalog Service
-	prodSvc, err := prodcatalog.NewProductService(nil, nil, nil)
+	prodSvc, err := catalog.NewProductService(nil, nil, nil)
 	a.ifErrShutdown(ctx, err)
 	a.productSvc = prodSvc
 
