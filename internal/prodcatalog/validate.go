@@ -2,44 +2,16 @@ package prodcatalog
 
 import (
 	"context"
-	"fmt"
 	"github.com/HBeserra/GoShop/domain"
-	"github.com/HBeserra/GoShop/domain/events"
 	"github.com/HBeserra/GoShop/pkg/currency"
 	"github.com/HBeserra/GoShop/pkg/observability"
-	"github.com/google/uuid"
-	"log/slog"
 	"slices"
-	"time"
 )
 
-func (s *ProductService) CreateProduct(
-	ctx context.Context,
-	product *domain.Product,
-) error {
+func (s *ProductService) Validate(ctx context.Context, product *domain.Product) error {
 
-	ctx, span := observability.StartSpan(ctx, "ProductService.CreateProduct")
+	ctx, span := observability.StartSpan(ctx, "prodcatalog.Validate")
 	defer span.End()
-
-	userID, err := s.auth.GetUserID(ctx)
-	if err != nil {
-		return err
-	}
-	if userID == uuid.Nil {
-		return domain.ErrUnauthorized
-	}
-
-	perm, err := s.auth.HasPermission(ctx, userID, "product:create")
-	if err != nil {
-		return fmt.Errorf("%w: %w", domain.ErrUnauthorized, err)
-	}
-	if !perm {
-		return domain.ErrUnauthorized
-	}
-
-	product.ID = uuid.New()
-	product.CreatedAt = time.Now()
-	product.UpdatedAt = time.Now()
 
 	if len(product.Title) < 10 || len(product.Title) > 100 {
 		return domain.ErrInvalidProductTitle
@@ -95,35 +67,5 @@ func (s *ProductService) CreateProduct(
 			}
 		}
 	}
-
-	err = s.repo.Create(ctx, product)
-	if err != nil {
-		span.RecordError(err)
-		return domain.ErrFailedToCreateProduct
-	}
-
-	err = s.bus.Publish(ctx, "product:created", events.ProductCreated{
-		ID:        product.ID,
-		Title:     product.Title,
-		CreatedOn: product.CreatedAt,
-		CreatedBy: userID,
-	})
-	if err != nil {
-		span.RecordError(err)
-		slog.ErrorContext(ctx, "failed to publish product:created event",
-			"product_id", product.ID,
-			"title", product.Title,
-			"created_on", product.CreatedAt,
-			"created_by", userID,
-			"error", err)
-		return nil
-	}
-
-	slog.InfoContext(ctx, "product created",
-		"product_id", product.ID,
-		"title", product.Title,
-		"created_on", product.CreatedAt,
-		"created_by", userID,
-	)
 	return nil
 }

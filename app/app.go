@@ -12,6 +12,5 @@ type shutdownFn struct {
 
 type app struct {
 	shutdownFn []shutdownFn
-	AuthSvc    prodcatalog.ProductService
-	ProductSvc *prodcatalog.ProductService
+	productSvc *prodcatalog.ProductService
 }

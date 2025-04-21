@@ -13,4 +13,5 @@ var (
 	ErrInvalidProductTitle   = errors.New("invalid product title")
 	ErrInvalidProductStatus  = errors.New("invalid product status")
 	ErrFailedToCreateProduct = errors.New("failed to create product")
+	ErrInvalidMedia          = errors.New("invalid media")
 )

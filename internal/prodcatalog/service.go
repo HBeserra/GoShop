@@ -9,7 +9,7 @@ import (
 
 // ProductRepository defines an interface for managing product data, including retrieval, deletion, and restoration operations.
 //
-//go:generate mockgen -source=service.go -destination mock_product_repository_test.go --package ProductCatalog_test
+//go:generate mockgen -source=service.go -destination mock_product_repository_test.go --package prodcatalog_test
 type ProductRepository interface {
 
 	// Find retrieves a list of products matching the criteria specified in the provided product filter. Returns an error if the operation fails.
@@ -46,20 +46,29 @@ type EventBus interface {
 
 // AuthService returns information about the current command
 type AuthService interface {
+	GetUserID(ctx context.Context) (uuid.UUID, error)
 	GetPermissions(ctx context.Context, userID uuid.UUID) ([]string, error)
-	HasPermission(ctx context.Context, userID uuid.UUID, permission string) (bool, error)
+	HasPermission(ctx context.Context, userID uuid.UUID, permission ...string) (bool, error)
+}
+
+type MediaCtrl interface {
+	GetByID(ctx context.Context, id uuid.UUID) (*domain.Media, error)
+	GetPublicURL(ctx context.Context, id uuid.UUID) (string, error)
+	Upload(ctx context.Context, file []byte, mediaType string) (uuid.UUID, error)
 }
 
 type ProductService struct {
-	repo ProductRepository
-	bus  EventBus
-	auth AuthService
+	repo  ProductRepository
+	bus   EventBus
+	auth  AuthService
+	media MediaCtrl
 }
 
-func NewProductService(repo ProductRepository, bus EventBus, auth AuthService) (*ProductService, error) {
+func NewProductService(repo ProductRepository, bus EventBus, auth AuthService, media MediaCtrl) (*ProductService, error) {
 	return &ProductService{
-		repo: repo,
-		bus:  bus,
-		auth: auth,
+		repo:  repo,
+		bus:   bus,
+		auth:  auth,
+		media: media,
 	}, nil
 }

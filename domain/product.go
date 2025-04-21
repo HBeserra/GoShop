@@ -22,7 +22,7 @@ type Product struct {
 	// SKU is the stock-keeping unit, a unique identifier for inventory tracking.
 	SKU string `json:"sku" gorm:"index:idx_product"`
 	// Medias represents a collection of associated media objects for a product, stored with many-to-many relationship mapping.
-	Medias []Media `json:"medias" gorm:"many2many:product_medias;"`
+	Medias []uuid.UUID `json:"medias"`
 	// Variants represents a collection of associated variant objects for a product, such as size or color options.
 	Variants []ProductVariant
 }
@@ -46,7 +46,7 @@ type ProductVariant struct {
 	// Stock indicates the quantity of this product variant available in inventory.
 	Stock int64 `json:"stock"`
 	// Medias represents a collection of associated media for the product variant, using a many-to-many relationship.
-	Medias []Media `json:"medias" gorm:"many2many:product_variant_medias;"`
+	Medias []uuid.UUID `json:"medias"`
 
 	ShortDesc string `json:"short_desc"`
 	HtmlDesc  string `json:"html_desc"`

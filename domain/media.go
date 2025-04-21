@@ -7,14 +7,15 @@ import (
 
 type Media struct {
 	gorm.Model
-	ID        uuid.UUID `json:"id"`
+	ID        uuid.UUID `json:"id" gorm:"primaryKey;index:idx_media"`
+	Namespace string    `json:"namespace" gorm:"index:idx_media"`
 	CreatedAt string    `json:"created_at"`
 	UpdatedAt string    `json:"updated_at"`
 
 	// Url is the public link for the media
 	Url string `json:"url"`
 	// Type indicates the media's content type, such as image, video, or document.
-	Type string `json:"type"`
+	Type string `json:"type" gorm:"index:idx_media"`
 	// Size represents the size of the media in bytes.
 	Size int `json:"size"`
 }

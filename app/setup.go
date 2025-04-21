@@ -25,7 +25,7 @@ func New(ctx context.Context) {
 	// Set up the Product Catalog Service
 	prodSvc, err := prodcatalog.NewProductService(nil, nil, nil)
 	a.ifErrShutdown(ctx, err)
-	a.ProductSvc = prodSvc
+	a.productSvc = prodSvc
 
 	/*
 	 *	Start the controllers
