@@ -309,17 +309,17 @@ func (mr *MockMediaCtrlMockRecorder) GetPublicURL(ctx, namespace, id any) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPublicURL", reflect.TypeOf((*MockMediaCtrl)(nil).GetPublicURL), ctx, namespace, id)
 }
 
-// Upload mocks base method.
-func (m *MockMediaCtrl) Upload(ctx context.Context, namespace string, file []byte, mediaType string) (uuid.UUID, error) {
+// Save mocks base method.
+func (m *MockMediaCtrl) Save(ctx context.Context, namespace string, file []byte, mediaType string) (uuid.UUID, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Upload", ctx, namespace, file, mediaType)
+	ret := m.ctrl.Call(m, "Save", ctx, namespace, file, mediaType)
 	ret0, _ := ret[0].(uuid.UUID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// Upload indicates an expected call of Upload.
+// Save indicates an expected call of Save.
 func (mr *MockMediaCtrlMockRecorder) Upload(ctx, namespace, file, mediaType any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Upload", reflect.TypeOf((*MockMediaCtrl)(nil).Upload), ctx, namespace, file, mediaType)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockMediaCtrl)(nil).Save), ctx, namespace, file, mediaType)
 }

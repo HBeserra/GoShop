@@ -56,7 +56,7 @@ type AuthService interface {
 type MediaCtrl interface {
 	GetByID(ctx context.Context, namespace string, id uuid.UUID) (*domain.Media, error)
 	GetPublicURL(ctx context.Context, namespace string, id uuid.UUID) (string, error)
-	Upload(ctx context.Context, namespace string, file []byte, mediaType string) (uuid.UUID, error)
+	Save(ctx context.Context, namespace string, file []byte, filename string) (uuid.UUID, error)
 }
 
 type ProductService struct {

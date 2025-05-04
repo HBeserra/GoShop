@@ -15,3 +15,9 @@ var (
 	ErrFailedToCreateProduct = errors.New("failed to create product")
 	ErrInvalidMedia          = errors.New("invalid media")
 )
+
+// Media related errors
+var (
+	ErrInvalidMediaType = errors.New("invalid media type")
+	ErrFileTooLarge     = errors.New("file too large")
+)
